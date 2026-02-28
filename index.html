@@ -2,593 +2,683 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FileFlow — Studio Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#020205" />
+  <meta name="description" content="FileFlow Studio: High-performance digital architecture, bespoke web systems, and strategic engineering for global operations." />
+  <title>FileFlow — High-Density Web Architecture</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --bg:#07070a;
-      --ink:#f3f4f6;
-      --muted:rgba(243,244,246,.66);
-      --hair:rgba(243,244,246,.10);
-      --card:rgba(255,255,255,.03);
-      --card2:rgba(255,255,255,.06);
-      --accent:#e8e8e8;
-      --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans:Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --r:24px;
-      --shadow: 0 30px 120px rgba(0,0,0,.55);
+    /* ========================================
+    DESIGN SYSTEM: THE OBSIDIAN PROTOCOL
+    ========================================
+    */
+    :root {
+      /* Colors: Deep, Expensive, Professional */
+      --bg-void: #020205;
+      --bg-surface: #0a0a0f;
+      --bg-elevated: #12121b;
+      --bg-glass: rgba(10, 10, 15, 0.75);
+      
+      --accent-silver: #e2e8f0;
+      --accent-chrome: #94a3b8;
+      --accent-dim: #475569;
+      --accent-glow: rgba(226, 232, 240, 0.08);
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-disabled: #334155;
+      
+      --stroke-light: rgba(255, 255, 255, 0.06);
+      --stroke-medium: rgba(255, 255, 255, 0.12);
+      
+      /* Typography */
+      --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+      --font-serif: "Playfair Display", serif;
+      --font-mono: "JetBrains Mono", monospace;
+      
+      /* Spacing & Geometry */
+      --radius-full: 9999px;
+      --radius-lg: 32px;
+      --radius-md: 16px;
+      --radius-sm: 8px;
+      --container-w: 1440px;
+      
+      /* Animation */
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+      --transition-med: 400ms var(--ease-standard);
+      --transition-slow: 800ms var(--ease-standard);
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--ink);
-      background:
-        radial-gradient(900px 480px at 10% 10%, rgba(255,255,255,.08), transparent 60%),
-        radial-gradient(900px 520px at 90% 20%, rgba(255,255,255,.06), transparent 60%),
-        radial-gradient(700px 500px at 60% 90%, rgba(255,255,255,.05), transparent 55%),
-        linear-gradient(180deg, #07070a 0%, #050508 100%);
-      overflow-x:hidden;
+    /* Base Setup */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    a{ color:inherit; text-decoration:none; }
-    button{ font-family:inherit; }
-
-    /* Top bar */
-    .topbar{
-      position:fixed;
-      top:0; left:0; right:0;
-      z-index:50;
-      backdrop-filter: blur(14px);
-      background: rgba(7,7,10,.62);
-      border-bottom:1px solid var(--hair);
-    }
-    .topbar__inner{
-      max-width:1240px;
-      margin:0 auto;
-      padding:16px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-    .logo{
-      display:flex; align-items:center; gap:12px;
-      min-width:220px;
-    }
-    .mark{
-      width:30px; height:30px;
-      border-radius:10px;
-      background:
-        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.35), transparent 60%),
-        linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-      border:1px solid var(--hair);
-      box-shadow: 0 18px 70px rgba(255,255,255,.07);
-    }
-    .logo__text{
-      display:flex; flex-direction:column; line-height:1.05;
-    }
-    .logo__name{ font-weight:800; letter-spacing:-.03em; }
-    .logo__tag{ font-family:var(--mono); font-size:11px; color:var(--muted); }
-
-    .nav{
-      display:flex; align-items:center; gap:20px;
-      font-size:13px;
-      font-weight:600;
-      letter-spacing:.01em;
-    }
-    .nav a{
-      color:var(--muted);
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid transparent;
-    }
-    .nav a:hover{
-      color:var(--ink);
-      border-color:var(--hair);
-      background:rgba(255,255,255,.02);
+    /* Background Textures */
+    .grain {
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    .cta{
-      display:flex; align-items:center; gap:10px;
-      min-width:220px;
-      justify-content:flex-end;
-    }
-    .pill{
-      height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid var(--hair);
-      background:rgba(255,255,255,.02);
-      color:var(--ink);
-      font-weight:700;
-      font-size:13px;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      cursor:pointer;
-    }
-    .pill:hover{ transform: translateY(-1px); }
-    .pill--solid{
-      background: var(--accent);
-      color:#000;
-      border-color: transparent;
-    }
-    .dot{
-      width:7px;height:7px;border-radius:50%;
-      background:#000;
-      opacity:.9;
+    .glow-blob {
+      position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none; z-index: -1;
     }
 
-    /* Layout */
-    .wrap{
-      max-width:1240px;
-      margin:0 auto;
-      padding:110px 20px 70px;
+    /* Layout Components */
+    .section { padding: 120px 0; position: relative; }
+    .container { width: min(var(--container-w), 100% - 64px); margin: 0 auto; }
+    .grid { display: grid; gap: 32px; }
+    
+    /* Typography Styles */
+    h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; }
+    .mono { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .display-1 { font-size: clamp(56px, 10vw, 110px); }
+    .display-2 { font-size: clamp(40px, 6vw, 72px); }
+    
+    /* Global Navigation */
+    .header {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      padding: 24px 0; transition: all var(--transition-med);
     }
+    .header.scrolled {
+      padding: 16px 0; background: var(--bg-glass); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--stroke-light);
+    }
+    .nav-wrap { display: flex; justify-content: space-between; align-items: center; }
+    .logo { 
+      font-family: var(--font-serif); font-size: 24px; text-decoration: none; color: var(--text-primary);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo-mark { width: 32px; height: 32px; background: var(--text-primary); border-radius: 8px; position: relative; }
+    .logo-mark::after { content: ''; position: absolute; inset: 6px; border: 2px solid var(--bg-void); }
 
-    .hero{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:22px;
-      align-items:stretch;
+    .nav-list { display: flex; gap: 40px; list-style: none; }
+    .nav-link { 
+      text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500;
+      transition: color var(--transition-med);
     }
+    .nav-link:hover { color: var(--text-primary); }
 
-    .panel{
-      border:1px solid var(--hair);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 14px 28px; border-radius: var(--radius-full);
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      cursor: pointer; transition: all var(--transition-med);
+      border: 1px solid var(--stroke-medium);
     }
+    .btn-primary { background: var(--text-primary); color: var(--bg-void); border-color: var(--text-primary); }
+    .btn-primary:hover { background: transparent; color: var(--text-primary); transform: translateY(-2px); }
+    .btn-outline { color: var(--text-primary); background: transparent; }
+    .btn-outline:hover { background: var(--bg-elevated); transform: translateY(-2px); }
 
-    .heroLeft{
-      position:relative;
-      padding:34px 34px 28px;
-      min-height:520px;
+    /* Hero Section */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 100px; }
+    .hero-grid { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
+    .hero-content { position: relative; z-index: 10; }
+    .hero-visual { position: relative; height: 600px; }
+    
+    /* The Abstract System Visual */
+    .system-frame {
+      position: absolute; inset: 0; background: var(--bg-surface);
+      border-radius: var(--radius-lg); border: 1px solid var(--stroke-medium);
+      overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
     }
+    .system-header {
+      padding: 16px 24px; border-bottom: 1px solid var(--stroke-light);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .system-body { padding: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); line-height: 2; }
+    .cursor-line { border-right: 2px solid var(--accent-silver); animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { border-color: transparent; } }
 
-    .kicker{
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:18px;
-      letter-spacing:.02em;
+    /* Bento Cards */
+    .bento-grid { grid-template-columns: repeat(12, 1fr); }
+    .card {
+      background: var(--bg-surface); border: 1px solid var(--stroke-light);
+      border-radius: var(--radius-lg); padding: 48px; position: relative;
+      overflow: hidden; transition: border-color var(--transition-med);
     }
-    .kicker .line{
-      height:1px; flex:1;
-      background:linear-gradient(90deg, transparent, var(--hair));
-    }
+    .card:hover { border-color: var(--stroke-medium); }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
 
-    h1{
-      margin:0;
-      font-size: clamp(44px, 5.2vw, 76px);
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      line-height: 0.95;
-    }
-    .sub{
-      margin-top:18px;
-      max-width:60ch;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.55;
-    }
+    /* The Lead Vault UI */
+    .vault { margin-top: 40px; }
+    .vault-table { width: 100%; border-collapse: collapse; }
+    .vault-th { text-align: left; font-family: var(--font-mono); color: var(--text-muted); font-size: 11px; padding: 12px; border-bottom: 1px solid var(--stroke-light); }
+    .vault-td { padding: 16px 12px; font-size: 13px; border-bottom: 1px solid var(--stroke-light); }
+    .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 10px; background: var(--bg-elevated); border: 1px solid var(--stroke-light); }
 
-    .heroLeft .actions{
-      margin-top:26px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:center;
-    }
+    /* Footer Strategy */
+    .footer { background: #010103; padding: 100px 0 40px; border-top: 1px solid var(--stroke-light); }
+    .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 80px; }
+    .footer-col h4 { font-family: var(--font-sans); text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em; color: var(--text-disabled); margin-bottom: 32px; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 16px; }
+    .footer-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; transition: color var(--transition-med); }
+    .footer-links a:hover { color: var(--text-primary); }
 
-    .metaRow{
-      margin-top:26px;
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:10px;
+    /* Forms */
+    .form-field { margin-bottom: 32px; }
+    .form-label { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+    .form-input {
+      width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--stroke-medium);
+      padding: 16px 0; color: var(--text-primary); font-size: 18px; font-family: var(--font-serif);
+      outline: none; transition: border-color var(--transition-med);
     }
-    .chip{
-      border:1px solid var(--hair);
-      border-radius: 18px;
-      padding:14px 14px;
-      background: rgba(0,0,0,.18);
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-height:86px;
-    }
-    .chip .t{ font-family:var(--mono); font-size:11px; color:var(--muted); }
-    .chip .v{ font-weight:800; letter-spacing:-.02em; font-size:14px; }
+    .form-input:focus { border-color: var(--text-primary); }
 
-    /* Hero right: editorial stack */
-    .heroRight{
-      display:grid;
-      grid-template-rows: 1fr 1fr;
-      gap:22px;
-    }
+    /* Scroll Animations */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 1200ms var(--ease-out); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
 
-    .frame{
-      padding:0;
-      position:relative;
-      min-height:248px;
-      background:
-        radial-gradient(600px 240px at 20% 10%, rgba(255,255,255,.07), transparent 60%),
-        radial-gradient(600px 240px at 80% 90%, rgba(255,255,255,.06), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-    }
-
-    .frame__inner{
-      padding:26px 26px 22px;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:16px;
-    }
-
-    .frame h2{
-      margin:0;
-      font-size:18px;
-      letter-spacing:-.02em;
-      font-weight:900;
-    }
-    .frame p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-      max-width:56ch;
-    }
-
-    .linkRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .link{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--hair);
-      background: rgba(255,255,255,.02);
-      font-weight:700;
-      font-size:13px;
-      cursor:pointer;
-    }
-    .link:hover{ transform: translateY(-1px); }
-    .arrow{
-      width:10px;height:10px;
-      border-right:2px solid currentColor;
-      border-top:2px solid currentColor;
-      transform: rotate(45deg);
-      opacity:.9;
-    }
-
-    .marquee{
-      border-top:1px solid var(--hair);
-      background: rgba(0,0,0,.22);
-      overflow:hidden;
-      white-space:nowrap;
-    }
-    .marquee__track{
-      display:inline-block;
-      padding:12px 0;
-      animation: slide 22s linear infinite;
-      font-family:var(--mono);
-      font-size:12px;
-      color:rgba(243,244,246,.78);
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-    .marquee__track span{ margin-right:26px; }
-    @keyframes slide{
-      from{ transform: translateX(0); }
-      to{ transform: translateX(-50%); }
-    }
-
-    /* Section: cards */
-    .section{
-      margin-top:26px;
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:22px;
-    }
-    .sCard{
-      padding:22px;
-      border:1px solid var(--hair);
-      border-radius: var(--r);
-      background: rgba(255,255,255,.02);
-    }
-    .sCard .label{
-      font-family:var(--mono);
-      font-size:11px;
-      color:var(--muted);
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      margin-bottom:12px;
-    }
-    .sCard .title{
-      font-size:16px;
-      font-weight:900;
-      letter-spacing:-.02em;
-      margin-bottom:10px;
-    }
-    .sCard .body{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.65;
-      margin-bottom:16px;
-    }
-
-    .footer{
-      margin-top:54px;
-      border-top:1px solid var(--hair);
-      padding-top:22px;
-      display:flex;
-      gap:12px;
-      justify-content:space-between;
-      align-items:flex-start;
-      flex-wrap:wrap;
-      color:var(--muted);
-      font-size:12px;
-      font-family:var(--mono);
-    }
-
-    .toast{
-      position:fixed;
-      left:20px;
-      bottom:18px;
-      z-index:60;
-      max-width:520px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border:1px solid var(--hair);
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(12px);
-      color: rgba(243,244,246,.86);
-      font-size:12px;
-      font-family:var(--mono);
-      display:none;
-    }
-
-    @media (max-width: 980px){
-      .logo{ min-width:auto; }
-      .cta{ min-width:auto; }
-      .hero{
-        grid-template-columns:1fr;
-      }
-      .heroLeft{ min-height:auto; }
-      .section{ grid-template-columns: 1fr; }
-      .metaRow{ grid-template-columns: 1fr; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .marquee__track{ animation:none; }
-      .pill:hover,.link:hover{ transform:none; }
+    /* Responsive Logic */
+    @media (max-width: 1100px) {
+      .hero-grid, .footer-grid { grid-template-columns: 1fr; gap: 64px; }
+      .nav-list { display: none; }
+      .span-4, .span-6, .span-8 { grid-column: span 12; }
     }
   </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="topbar__inner">
-      <a class="logo" href="./index.html" aria-label="FileFlow home">
-        <div class="mark" aria-hidden="true"></div>
-        <div class="logo__text">
-          <div class="logo__name">FileFlow</div>
-          <div class="logo__tag">studio / systems</div>
-        </div>
+  <div class="grain"></div>
+
+  <header class="header" id="header">
+    <div class="container nav-wrap">
+      <a href="#" class="logo">
+        <div class="logo-mark"></div>
+        FileFlow
       </a>
-
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="./services.html">Services</a>
-        <a href="./work.html">Work</a>
-        <a href="./studio.html">Studio</a>
-        <a href="./contact.html">Contact</a>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="#mission" class="nav-link">Manifesto</a></li>
+          <li><a href="#architecture" class="nav-link">Architecture</a></li>
+          <li><a href="#workflow" class="nav-link">Workflow</a></li>
+          <li><a href="#vault-section" class="nav-link">Lead Vault</a></li>
+        </ul>
       </nav>
-
-      <div class="cta">
-        <a class="pill" href="https://fileflow-dusky.vercel.app" target="_blank" rel="noopener">
-          Visit company site <span class="arrow" aria-hidden="true"></span>
-        </a>
-        <button class="pill pill--solid" id="btnStart">
-          <span class="dot" aria-hidden="true"></span>
-          Start a project
-        </button>
+      <div class="flex" style="display:flex; gap:16px;">
+        <button class="btn btn-outline mono" id="cmd-btn">Cmd + K</button>
+        <a href="#inquiry" class="btn btn-primary">Start Build</a>
       </div>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero" aria-label="Hero">
-      <div class="panel heroLeft">
-        <div class="kicker">
-          <span>DEMO TEMPLATE</span>
-          <div class="line" aria-hidden="true"></div>
-          <span>2020–2023 EDITORIAL UI</span>
+  <main>
+    <section class="hero container">
+      <div class="grid hero-grid">
+        <div class="hero-content reveal">
+          <p class="mono" style="margin-bottom: 24px;">System Protocol v4.0.2 // 2026</p>
+          <h1 class="display-1">Digital architecture that <em style="color:var(--text-muted)">endures</em>.</h1>
+          <p style="font-size: 20px; color: var(--text-secondary); max-width: 540px; margin: 40px 0 56px;">
+            FileFlow Studio designs and engineers high-density web systems for the global elite. We prioritize technical discipline, sub-second latency, and aesthetic permanence.
+          </p>
+          <div style="display:flex; gap:20px;">
+            <a href="#inquiry" class="btn btn-primary">Initiate Inquiry</a>
+            <a href="#architecture" class="btn btn-outline">Explore The Stack</a>
+          </div>
+          
+          <div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 80px; border-top: 1px solid var(--stroke-light); padding-top: 40px;">
+            <div>
+              <p class="mono">Network Status</p>
+              <p style="font-weight: 600; font-size: 18px;">Optimal</p>
+            </div>
+            <div>
+              <p class="mono">Current Uptime</p>
+              <p style="font-weight: 600; font-size: 18px;">99.999%</p>
+            </div>
+            <div>
+              <p class="mono">Active Nodes</p>
+              <p style="font-weight: 600; font-size: 18px;">Global Core</p>
+            </div>
+          </div>
         </div>
 
-        <h1>
-          Build systems<br />
-          that stay clean<br />
-          under pressure.
-        </h1>
-
-        <p class="sub">
-          This demo is intentionally a different creative direction than the main FileFlow site:
-          editorial layout, minimal UI chrome, motion accents, and a studio-style narrative —
-          while still reflecting FileFlow’s core positioning.
-        </p>
-
-        <div class="actions">
-          <a class="pill pill--solid" href="./work.html">
-            View case-style pages <span class="arrow" aria-hidden="true"></span>
-          </a>
-          <a class="pill" href="./services.html">
-            Explore services <span class="arrow" aria-hidden="true"></span>
-          </a>
-          <button class="pill" id="btnCopy">
-            Copy contact email <span class="arrow" aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="metaRow" aria-label="Highlights">
-          <div class="chip">
-            <div class="t">Principle</div>
-            <div class="v">Design for maintainability</div>
-          </div>
-          <div class="chip">
-            <div class="t">Outcome</div>
-            <div class="v">Shippable, auditable systems</div>
-          </div>
-          <div class="chip">
-            <div class="t">Style</div>
-            <div class="v">Editorial + studio narrative</div>
+        <div class="hero-visual reveal" style="transition-delay: 200ms;">
+          <div class="system-frame">
+            <div class="system-header">
+              <div style="display:flex; gap:8px;">
+                <div style="width:10px; height:10px; background:var(--text-disabled); border-radius:50%;"></div>
+                <div style="width:10px; height:10px; background:var(--text-disabled); border-radius:50%;"></div>
+                <div style="width:10px; height:10px; background:var(--text-disabled); border-radius:50%;"></div>
+              </div>
+              <p class="mono">fileflow_terminal_v4</p>
+            </div>
+            <div class="system-body" id="typewriter-content">
+              </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="heroRight">
-        <div class="panel frame">
-          <div class="frame__inner">
-            <div>
-              <h2>Navigation is real.</h2>
-              <p>
-                This template uses separate pages (Services, Work, Studio, Contact) so every button and link
-                has an actual route and a real destination.
+    <section id="mission" class="section">
+      <div class="container">
+        <div class="reveal">
+          <p class="mono" style="margin-bottom: 32px;">01 // The Manifesto</p>
+          <h2 class="display-2" style="max-width: 900px; margin-bottom: 64px;">We reject the disposable web.</h2>
+          
+          <div class="grid bento-grid">
+            <div class="card span-6">
+              <h3 style="font-size: 28px; margin-bottom: 24px;">The Principle of Permanence</h3>
+              <p style="color: var(--text-secondary); font-size: 18px;">
+                Most digital products are built for the quarter, not the decade. FileFlow architectures are designed with "Lindy Effect" principles—the longer they survive, the more valuable they become. We use evergreen tech stacks that minimize technical debt and maximize operational longevity.
               </p>
             </div>
-
-            <div class="linkRow">
-              <a class="link" href="./studio.html">Open Studio <span class="arrow" aria-hidden="true"></span></a>
-              <a class="link" href="./contact.html">Open Contact <span class="arrow" aria-hidden="true"></span></a>
-              <a class="link" href="./services.html">Open Services <span class="arrow" aria-hidden="true"></span></a>
-            </div>
-          </div>
-
-          <div class="marquee" aria-hidden="true">
-            <div class="marquee__track">
-              <span>PRODUCT ENGINEERING</span>
-              <span>MOBILE • WEB • SAAS</span>
-              <span>PERFORMANCE</span>
-              <span>SECURITY</span>
-              <span>LONGEVITY</span>
-              <span>PRODUCT ENGINEERING</span>
-              <span>MOBILE • WEB • SAAS</span>
-              <span>PERFORMANCE</span>
-              <span>SECURITY</span>
-              <span>LONGEVITY</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel frame">
-          <div class="frame__inner">
-            <div>
-              <h2>High-signal positioning.</h2>
-              <p>
-                FileFlow builds production systems meant to operate under real constraints — predictable delivery,
-                clear architecture, and code that does not rot.
+            <div class="card span-6" style="background: var(--bg-elevated);">
+              <h3 style="font-size: 28px; margin-bottom: 24px;">Aesthetic Discipline</h3>
+              <p style="color: var(--text-secondary); font-size: 18px;">
+                We avoid the "trend of the month." Our design language is rooted in Swiss grid systems, classical typography, and a "Less but Better" philosophy. This ensures your brand looks as professional in 2036 as it does today.
               </p>
             </div>
-
-            <div class="linkRow">
-              <a class="link" href="mailto:contact@fileflow.com">Email <span class="arrow" aria-hidden="true"></span></a>
-              <a class="link" href="https://github.com/" target="_blank" rel="noopener">GitHub <span class="arrow" aria-hidden="true"></span></a>
-              <a class="link" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn <span class="arrow" aria-hidden="true"></span></a>
+            <div class="card span-12">
+              <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 64px;">
+                <div>
+                  <h3 style="font-size: 28px; margin-bottom: 24px;">Operational Excellence</h3>
+                  <p style="color: var(--text-secondary); font-size: 18px;">
+                    Every millisecond of latency is a lost opportunity. We treat performance as a fundamental design feature, not a technical checkbox. Our systems are audited for sub-200ms First Contentful Paint times on 4G networks globally.
+                  </p>
+                </div>
+                <div class="mono" style="background: rgba(0,0,0,0.3); padding: 32px; border-radius: 16px; font-size: 12px; line-height: 2;">
+                  // CORE AUDIT PARAMS<br>
+                  > ACCESSIBILITY: 100/100<br>
+                  > PERFORMANCE: 100/100<br>
+                  > SEO READINESS: OPTIMAL<br>
+                  > BUNDLE SIZE: < 150KB<br>
+                  > DATA INTEGRITY: VERIFIED
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-label="Overview">
-      <div class="sCard">
-        <div class="label">Mobile</div>
-        <div class="title">Native-first experiences</div>
-        <div class="body">
-          iOS-quality interactions, careful performance budgets, and architecture that stays readable as the feature surface grows.
-        </div>
-        <a class="link" href="./services.html">See mobile scope <span class="arrow" aria-hidden="true"></span></a>
-      </div>
+    <section id="architecture" class="section" style="background: var(--bg-surface);">
+      <div class="container">
+        <div class="reveal">
+          <p class="mono" style="margin-bottom: 32px;">02 // Technical Infrastructure</p>
+          <h2 class="display-2" style="margin-bottom: 80px;">Engineering the Unbreakable.</h2>
+          
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div style="padding-right: 40px;">
+              <h4 style="font-size: 20px; font-family: var(--font-sans); font-weight: 700; margin-bottom: 24px;">State Management</h4>
+              <p style="color: var(--text-muted); font-size: 15px;">
+                We deploy localized, low-latency state synchronization. Using modern reactive patterns, we ensure that user interactions are instantaneous across all device nodes.
+              </p>
+              <ul style="list-style: none; margin-top: 24px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px;">
+                <li>+ DISTRIBUTED EDGE DATA</li>
+                <li>+ ZERO-REFRESH UI</li>
+                <li>+ PERSISTENT LOCAL CACHE</li>
+              </ul>
+            </div>
+            
+            <div style="padding-right: 40px;">
+              <h4 style="font-size: 20px; font-family: var(--font-sans); font-weight: 700; margin-bottom: 24px;">Global Delivery</h4>
+              <p style="color: var(--text-muted); font-size: 15px;">
+                Your content is distributed across a massive global edge network. By serving assets from the node closest to the user, we bypass the physical limitations of the traditional web.
+              </p>
+              <ul style="list-style: none; margin-top: 24px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px;">
+                <li>+ NEXT-GEN CDN MAPPING</li>
+                <li>+ ASSET OPTIMIZATION ENGINE</li>
+                <li>+ MULTI-REGION FAILOVER</li>
+              </ul>
+            </div>
 
-      <div class="sCard">
-        <div class="label">Web</div>
-        <div class="title">Fast, elegant frontends</div>
-        <div class="body">
-          Modern UI with strong accessibility and predictable navigation. Built to be maintained by teams, not heroes.
+            <div style="padding-right: 40px;">
+              <h4 style="font-size: 20px; font-family: var(--font-sans); font-weight: 700; margin-bottom: 24px;">Security & Privacy</h4>
+              <p style="color: var(--text-muted); font-size: 15px;">
+                We architect for "Privacy by Design." No third-party tracking, no bloat, just secure-by-default code that protects your intellectual property and your users' data.
+              </p>
+              <ul style="list-style: none; margin-top: 24px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px;">
+                <li>+ END-TO-END ENCRYPTION</li>
+                <li>+ NO-THIRD-PARTY POLICY</li>
+                <li>+ AUDITABLE SOURCE CODE</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <a class="link" href="./work.html">See examples <span class="arrow" aria-hidden="true"></span></a>
-      </div>
-
-      <div class="sCard">
-        <div class="label">SaaS</div>
-        <div class="title">Operational systems</div>
-        <div class="body">
-          Auth, billing boundaries, observability, and data integrity considerations from day one — not week twelve.
-        </div>
-        <a class="link" href="./studio.html">See process <span class="arrow" aria-hidden="true"></span></a>
       </div>
     </section>
 
-    <div class="footer">
-      <div>© <span id="y"></span> FileFlow Inc.</div>
-      <div>Demo template • separate pages • real routing</div>
-      <div>
-        <a href="./contact.html">contact</a> •
-        <a href="./studio.html">studio</a> •
-        <a href="https://fileflow-dusky.vercel.app" target="_blank" rel="noopener">company</a>
+    <section id="workflow" class="section">
+      <div class="container">
+        <div class="reveal">
+          <p class="mono" style="margin-bottom: 32px;">03 // Operational Workflow</p>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 100px;">
+            <div>
+              <h2 class="display-2">A Disciplined Path to Launch.</h2>
+              <p style="margin-top: 40px; color: var(--text-secondary); font-size: 18px;">
+                We don't just "make" things. We follow a rigorous deployment pipeline that treats your product as a mission-critical system. Every stage is documented, tested, and verified.
+              </p>
+              <div style="margin-top: 64px;">
+                <a href="#inquiry" class="btn btn-outline">Review Process Docs</a>
+              </div>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:64px;">
+              <div style="display:flex; gap:32px; align-items:flex-start;">
+                <span class="mono" style="font-size: 14px; color: var(--text-primary);">01</span>
+                <div>
+                  <h4 style="font-size: 22px; margin-bottom: 12px;">Extraction & Mapping</h4>
+                  <p style="color: var(--text-muted); font-size: 15px;">We extract your business logic and map it to a technical blueprint. This phase defines the "True North" of the project.</p>
+                </div>
+              </div>
+              <div style="display:flex; gap:32px; align-items:flex-start;">
+                <span class="mono" style="font-size: 14px; color: var(--text-primary);">02</span>
+                <div>
+                  <h4 style="font-size: 22px; margin-bottom: 12px;">Structural Design</h4>
+                  <p style="color: var(--text-muted); font-size: 15px;">We build the skeletal system—the grids, the typography scales, and the information hierarchy—before a single color is chosen.</p>
+                </div>
+              </div>
+              <div style="display:flex; gap:32px; align-items:flex-start;">
+                <span class="mono" style="font-size: 14px; color: var(--text-primary);">03</span>
+                <div>
+                  <h4 style="font-size: 22px; margin-bottom: 12px;">Interface Engineering</h4>
+                  <p style="color: var(--text-muted); font-size: 15px;">High-fidelity components are crafted with attention to interaction detail, ensuring every click feels expensive and deliberate.</p>
+                </div>
+              </div>
+              <div style="display:flex; gap:32px; align-items:flex-start;">
+                <span class="mono" style="font-size: 14px; color: var(--text-primary);">04</span>
+                <div>
+                  <h4 style="font-size: 22px; margin-bottom: 12px;">Stress Testing</h4>
+                  <p style="color: var(--text-muted); font-size: 15px;">We push the system to its limits on older devices and slow networks to ensure universal operational reliability.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section id="vault-section" class="section" style="background: var(--bg-surface); border-top: 1px solid var(--stroke-light);">
+      <div class="container">
+        <div class="reveal">
+          <p class="mono" style="margin-bottom: 32px;">04 // Intelligence Layer</p>
+          <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 40px; align-items: flex-end;">
+            <h2 class="display-2">The Lead Vault.</h2>
+            <div style="text-align: right;">
+              <button class="btn btn-outline mono" onclick="clearLeads()">Wipe Local Cache</button>
+              <button class="btn btn-primary mono" onclick="exportLeads()">Export JSON</button>
+            </div>
+          </div>
+
+          <div class="card span-12 vault" style="margin-top: 64px; padding: 0;">
+            <div style="padding: 24px; border-bottom: 1px solid var(--stroke-light); display:flex; justify-content:space-between;">
+              <p class="mono">Active Persistence: Enabled</p>
+              <p class="mono" id="lead-count">Stored Units: 0</p>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="vault-table" id="vault-table">
+                <thead>
+                  <tr>
+                    <th class="vault-th">Timestamp</th>
+                    <th class="vault-th">Origin Entity</th>
+                    <th class="vault-th">Communication Path</th>
+                    <th class="vault-th">Scope / Brief</th>
+                    <th class="vault-th">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="vault-body">
+                  </tbody>
+              </table>
+              <div id="empty-state" style="padding: 80px; text-align: center; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px;">
+                > VOID DETECTED: SUBMIT INQUIRY TO INITIALIZE DATA...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="inquiry" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="grid" style="grid-template-columns: 0.8fr 1.2fr; gap: 100px;">
+            <div>
+              <p class="mono" style="margin-bottom: 32px;">05 // Contact</p>
+              <h2 class="display-2">Let’s build the future.</h2>
+              <p style="margin-top: 40px; color: var(--text-secondary); font-size: 18px;">
+                Our studio operates on a high-signal basis. We selectively take on 4-6 major builds per year to ensure absolute quality. Describe your mission in detail.
+              </p>
+              <div style="margin-top: 64px;">
+                <p class="mono">Primary Frequency</p>
+                <p style="font-size: 24px; font-family: var(--font-serif);">direct@fileflowco.com</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <form id="inquiry-form">
+                <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                  <div class="form-field">
+                    <label class="form-label">Identifier (Name)</label>
+                    <input type="text" class="form-input" name="name" placeholder="E.g. Alexander Sterling" required>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">Communication Node (Email)</label>
+                    <input type="email" class="form-input" name="email" placeholder="E.g. alex@sterling.co" required>
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Entity (Company)</label>
+                  <input type="text" class="form-input" name="company" placeholder="E.g. Sterling Capital Group">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Project Brief (Objectives & Timeline)</label>
+                  <textarea class="form-input" name="message" style="min-height: 120px;" placeholder="Describe the architectural requirements..." required></textarea>
+                </div>
+                <div style="margin-top: 32px;">
+                  <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Transmit Brief</button>
+                  <p class="mono" style="margin-top: 24px; text-align: center; font-size: 10px;">By transmitting, you agree to our non-disclosure protocol.</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <footer class="footer">
+    <div class="container">
+      <div class="grid footer-grid">
+        <div class="footer-col">
+          <a href="#" class="logo" style="font-size: 32px; margin-bottom: 40px;">FileFlow.</a>
+          <p style="color: var(--text-muted); font-size: 15px; max-width: 320px;">
+            A FileFlowCo Production. Engineered for performance, designed for permanence. 2026 Edition.
+          </p>
+          <div style="margin-top: 40px; display:flex; gap: 20px;">
+            <a href="#" class="mono" style="text-decoration:none;">X.com</a>
+            <a href="#" class="mono" style="text-decoration:none;">Github</a>
+            <a href="#" class="mono" style="text-decoration:none;">LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul class="footer-links">
+            <li><a href="#mission">Manifesto</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#workflow">Workflow</a></li>
+            <li><a href="#vault-section">The Vault</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Ventures</h4>
+          <ul class="footer-links">
+            <li><a href="#">FileFlow OS</a></li>
+            <li><a href="#">Cloud Core</a></li>
+            <li><a href="#">Studio Lab</a></li>
+            <li><a href="#">Security Hub</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Protocol</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Secure Handoff</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 100px; padding-top: 40px; border-top: 1px solid var(--stroke-light); display:flex; justify-content:space-between; align-items:center;">
+        <p class="mono" style="color: var(--text-disabled);">© 2026 FILEFLOW INC. ALL RIGHTS RESERVED.</p>
+        <p class="mono" style="color: var(--text-disabled);">v4.0.2 / MBPM1_OPTIMIZED</p>
+      </div>
+    </div>
+  </footer>
 
   <script>
-    (function () {
-      const EMAIL = "contact@fileflow.com";
+    (function() {
+      "use strict";
 
-      const toast = document.getElementById("toast");
-      const showToast = (msg) => {
-        toast.textContent = msg;
-        toast.style.display = "block";
-        window.clearTimeout(showToast._t);
-        showToast._t = window.setTimeout(() => {
-          toast.style.display = "none";
-        }, 1800);
-      };
-
-      document.getElementById("y").textContent = String(new Date().getFullYear());
-
-      const btnCopy = document.getElementById("btnCopy");
-      btnCopy.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(EMAIL);
-          showToast("Copied: " + EMAIL);
-        } catch (e) {
-          showToast("Copy failed. Email: " + EMAIL);
+      // 1. HEADER LOGIC
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
         }
       });
 
-      const btnStart = document.getElementById("btnStart");
-      btnStart.addEventListener("click", () => {
-        window.location.href = "./contact.html#start";
+      // 2. REVEAL ANIMATIONS
+      const reveals = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      reveals.forEach(r => revealObserver.observe(r));
+
+      // 3. TYPEWRITER TERMINAL EFFECT
+      const terminal = document.getElementById('typewriter-content');
+      const lines = [
+        "> INITIALIZING FILEFLOW CORE...",
+        "> LOADING ARCHITECTURAL MAPPING...",
+        "> NODE_STATUS: OPTIMAL",
+        "> LATENCY: 12ms",
+        "> SECURITY_KEY: VERIFIED",
+        "> READY FOR NEW INQUIRY.",
+        "> [SYSTEM READY]"
+      ];
+      
+      let lineIndex = 0;
+      function typeLine() {
+        if (lineIndex < lines.length) {
+          const p = document.createElement('div');
+          p.textContent = lines[lineIndex];
+          terminal.appendChild(p);
+          lineIndex++;
+          setTimeout(typeLine, 800);
+        }
+      }
+      setTimeout(typeLine, 1000);
+
+      // 4. LEAD VAULT SYSTEM
+      const STORAGE_KEY = "fileflow_vault_data_v4";
+      const vaultBody = document.getElementById('vault-body');
+      const vaultTable = document.getElementById('vault-table');
+      const emptyState = document.getElementById('empty-state');
+      const leadCountEl = document.getElementById('lead-count');
+
+      function getLeads() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      }
+
+      function updateVault() {
+        const leads = getLeads();
+        leadCountEl.textContent = `Stored Units: ${leads.length}`;
+
+        if (leads.length === 0) {
+          vaultTable.style.display = 'none';
+          emptyState.style.display = 'block';
+        } else {
+          vaultTable.style.display = 'table';
+          emptyState.style.display = 'none';
+          
+          vaultBody.innerHTML = leads.reverse().map(l => `
+            <tr>
+              <td class="vault-td mono">${new Date(l.date).toLocaleDateString()}</td>
+              <td class="vault-td"><b>${l.name}</b></td>
+              <td class="vault-td color-muted">${l.email}</td>
+              <td class="vault-td" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${l.message}</td>
+              <td class="vault-td"><span class="status-tag">ACTIVE</span></td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      // 5. FORM SUBMISSION
+      const form = document.getElementById('inquiry-form');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const newLead = {
+          name: fd.get('name'),
+          email: fd.get('email'),
+          company: fd.get('company'),
+          message: fd.get('message'),
+          date: new Date().toISOString()
+        };
+
+        const currentLeads = getLeads();
+        currentLeads.push(newLead);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentLeads));
+        
+        form.reset();
+        updateVault();
+        alert("TRANSMISSION SUCCESSFUL. DATA PERSISTED TO VAULT.");
       });
+
+      // 6. UTILITIES
+      window.clearLeads = function() {
+        if (confirm("PURGE ALL DATA FROM LOCAL VAULT?")) {
+          localStorage.removeItem(STORAGE_KEY);
+          updateVault();
+        }
+      };
+
+      window.exportLeads = function() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return alert("VAULT IS EMPTY.");
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fileflow_vault_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+      };
+
+      // Initialization
+      updateVault();
+      console.log("FileFlow Architecture Initialized // 2026");
+
     })();
   </script>
 </body>
